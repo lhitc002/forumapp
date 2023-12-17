@@ -80,7 +80,7 @@ li {
   color: rgb(255, 115, 0);
 }
 
-.stickyShopTitle {
+.stickyForumTitle {
   background: white;
   position: sticky;
   top: 48px;
@@ -128,7 +128,7 @@ li {
 }
 
 @media screen and (max-width: 767px) {
-  .stickyShopTitle {
+  .stickyForumTitle {
     top: 12vh;
   }
   .stickyNavbar {

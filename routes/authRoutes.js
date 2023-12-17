@@ -3,10 +3,12 @@
  * in the second parameter of res render, an object, i am passing custom variables in like the layout.html file and the custom date function result
  *
  * @param {*} app - The Express.js application instance to which routes will be mapped.
- * @param {*} shopData - An object storing the express ejs layout location and extra data like my shop name.
+ * @param {*} appData - An object storing the express ejs layout location and extra data like my shop name.
  */
-module.exports = function (app, shopData) {
-  let crypto = require("crypto");
+module.exports = function (app, appData) {
+  const crypto = require("crypto");
+  const { v4: uuidv4 } = require("uuid");
+
   function hashPassword(str) {
     return crypto.subtle
       .digest("SHA-512", new TextEncoder("utf-8").encode(str))
@@ -78,7 +80,6 @@ module.exports = function (app, shopData) {
     }
   }
 
-  const { v4: uuidv4 } = require("uuid");
   function registerUser(
     userNameString,
     passwordString,
@@ -161,7 +162,7 @@ module.exports = function (app, shopData) {
 
   // mapping the register page route to the register.ejs view and setting the layout from express-ejs-layouts to shared/layout.ejs
   app.get("/register", function (req, res) {
-    let newData = Object.assign({}, shopData, {
+    let newData = Object.assign({}, appData, {
       user: req.session.user,
       userId: req.session.userId,
     });
@@ -179,7 +180,7 @@ module.exports = function (app, shopData) {
         req.body.email
       );
 
-      let newData = Object.assign({}, shopData, {
+      let newData = Object.assign({}, appData, {
         userName: req.body.userName,
         user: req.session.user,
         userId: req.session.userId,
@@ -194,7 +195,7 @@ module.exports = function (app, shopData) {
 
   // mapping the login page route to the login.ejs view and setting the layout from express-ejs-layouts to shared/layout.ejs
   app.get("/login", function (req, res) {
-    let newData = Object.assign({}, shopData, {
+    let newData = Object.assign({}, appData, {
       user: req.session.user,
       userId: req.session.userId,
       errorMsg: "",
@@ -202,7 +203,7 @@ module.exports = function (app, shopData) {
     res.render("login.ejs", newData);
   });
 
-  // this page is accessed via a POST request from the /register page. It displays the query sent via the get request in JSON.
+  // this page is accessed via a POST request from the /login page. It validates a login request and then starts a user session
   app.post("/loggedin", function (req, res) {
     try {
       startLoginSession(
@@ -215,7 +216,7 @@ module.exports = function (app, shopData) {
             res.redirect("./"); // Successful login redirects to home page
           } else {
             // Render login page with error message
-            let newData = Object.assign({}, shopData, {
+            let newData = Object.assign({}, appData, {
               userName: req.body.userName,
               errorMsg: errorMsg,
               user: req.session.user,
@@ -260,7 +261,7 @@ module.exports = function (app, shopData) {
         } else {
           const userData = results[0]; // Assuming the query fetches a single user
 
-          let newData = Object.assign({}, shopData, {
+          let newData = Object.assign({}, appData, {
             user: req.session.user,
             userId: req.session.userId,
             userName: userData.UserName,
@@ -274,7 +275,7 @@ module.exports = function (app, shopData) {
         }
       });
     } else {
-      let newData = Object.assign({}, shopData, {
+      let newData = Object.assign({}, appData, {
         user: req.session.user,
         userId: req.session.userId,
         errorMsg: "",
@@ -310,7 +311,7 @@ module.exports = function (app, shopData) {
       hashPassword(oldPasswordString)
         .then((passwordHash) => {
           if (passwordHash !== user.passwordHash) {
-            let newData = Object.assign({}, shopData, {
+            let newData = Object.assign({}, appData, {
               userName: req.body.userName,
               errorMsg: "Old password is incorrect",
               user: req.session.user,

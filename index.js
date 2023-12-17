@@ -7,7 +7,7 @@
 /**
  * Variable declaration section
  */
-const shopData = {
+const appData = {
     appName: "Goldsmiths Forum"
 }; // Defining the shop data object
 
@@ -71,7 +71,7 @@ function mapRoutes(app) {
 
     // this object combines the variables of the layoutData object with any others I want, then can be passed into the page mappings to be used
     // The elipses are required. These operators are called object spread. they copy the individual properties of objects into this single one instead of copying the objects as a whole
-    var combinedData = { ...layoutData, ...shopData };
+    var combinedData = { ...layoutData, ...appData };
 
     // Requires the main.js and authRoutes.js file inside the routes folder passing in the Express app and data as arguments.  
     // All the route mappings will go in these files, instead of here.
@@ -118,7 +118,7 @@ function main() {
     mapRoutes(app); // custom function that I put the route mappings in, to save space
 
     // Start the web app listening on specified port
-    app.listen(port, () => console.log(`${shopData.appName} app listening on port ${port}!`));
+    app.listen(port, () => console.log(`${appData.appName} app listening on port ${port}!`));
 }
 
 // Calls the main function, consequently starting the web application

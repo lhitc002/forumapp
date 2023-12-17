@@ -3,9 +3,10 @@
  * in the second parameter of res render, an object, i am passing custom variables in like the layout.html file and the custom date function result
  *
  * @param {*} app - The Express.js application instance to which routes will be mapped.
- * @param {*} shopData - An object storing the express ejs layout location and extra data like my shop name.
+ * @param {*} appData - An object storing the express ejs layout location and extra data like my forum name.
  */
-module.exports = function (app, shopData) {
+module.exports = function (app, appData) {
+  const { v4: uuidv4 } = require("uuid");
   let allowedItemTypes = ["topics", "posts", "users"];
   // Check if user is logged in
 
@@ -35,7 +36,7 @@ module.exports = function (app, shopData) {
   }
 
   app.get("/", function (req, res) {
-    let newData = Object.assign({}, shopData, {
+    let newData = Object.assign({}, appData, {
       user: req.session.user,
       userId: req.session.userId,
     });
@@ -44,7 +45,7 @@ module.exports = function (app, shopData) {
   });
 
   app.get("/about", function (req, res) {
-    let newData = Object.assign({}, shopData, {
+    let newData = Object.assign({}, appData, {
       user: req.session.user,
       userId: req.session.userId,
     });
@@ -52,7 +53,7 @@ module.exports = function (app, shopData) {
   });
 
   app.get("/search", function (req, res) {
-    let newData = Object.assign({}, shopData, {
+    let newData = Object.assign({}, appData, {
       user: req.session.user,
       userId: req.session.userId,
     });
@@ -110,7 +111,7 @@ module.exports = function (app, shopData) {
         res.redirect("./");
       }
 
-      let newData = Object.assign({}, shopData, { availableItems: result });
+      let newData = Object.assign({}, appData, { availableItems: result });
       newData.layout = false;
 
       res.render("_search-results.ejs", newData);
@@ -119,45 +120,69 @@ module.exports = function (app, shopData) {
 
   app.get("/list", function (req, res) {
     let itemType = req.query.itemType;
-
-    if (
-      itemType != null &&
-      typeof itemType === "string" &&
-      allowedItemTypes.includes(itemType.toLowerCase())
-    ) {
-      let sqlquery = getColumnsAndQuery(itemType);
-
-      db.query(sqlquery, (err, result) => {
-        let newData;
+    
+    db.query(`SELECT UuidFromBin(Id) AS Id, Name FROM topics`, (err, results1) => {
         if (err) {
-          newData = Object.assign({}, shopData, {
-            querySuccess: false,
-            listHeading: `'${itemType}' is valid, but doesn't exist in the database for some reason!`,
-            user: req.session.user,
-            userId: req.session.userId,
-          });
-        } else {
-          newData = Object.assign({}, shopData, {
-            querySuccess: true,
-            columns: result,
-            listHeading: `Listing ${itemType}`,
-            user: req.session.user,
-            userId: req.session.userId,
-          });
+          console.error(err);
         }
 
-        res.render("list.ejs", newData);
-      });
-    } else {
-      let newData = Object.assign({}, shopData, {
-        querySuccess: false,
-        listHeading: `'${itemType}' is not a database table`,
-        user: req.session.user,
-        userId: req.session.userId,
-      });
+        const topics = results1;
 
-      res.render("list.ejs", newData);
-    }
+        db.query(`SELECT UuidFromBin(Id) AS Id, UserName FROM users`, (err, results2) => {
+            if (err) {
+              console.error(err);
+            }
+      
+            const users = results2;
+            if (
+              itemType != null &&
+              typeof itemType === "string" &&
+              allowedItemTypes.includes(itemType.toLowerCase())
+            ) {
+              let sqlquery = getColumnsAndQuery(itemType);
+        
+              db.query(sqlquery, (err, result) => {
+                let newData;
+                if (err) {
+                  newData = Object.assign({}, appData, {
+                    querySuccess: false,
+                    listHeading: `'${itemType}' is valid, but doesn't exist in the database for some reason!`,
+                    user: req.session.user,
+                    userId: req.session.userId,
+                    itemType: req.query.itemType,
+                    existingUsers: users,
+                    topics: topics
+                  });
+                } else {
+                  newData = Object.assign({}, appData, {
+                    querySuccess: true,
+                    columns: result,
+                    listHeading: `Listing ${itemType}`,
+                    user: req.session.user,
+                    userId: req.session.userId,
+                    itemType: req.query.itemType,
+                    existingUsers: users,
+                    topics: topics
+                  });
+                }
+        
+                res.render("list.ejs", newData);
+              });
+            } else {
+              let newData = Object.assign({}, appData, {
+                querySuccess: false,
+                listHeading: `'${itemType}' is not a database table`,
+                user: req.session.user,
+                userId: req.session.userId,
+                itemType: itemType,
+                existingUsers: users,
+                topics: topics
+              });
+        
+              res.render("list.ejs", newData);
+            }
+          });
+    });
   });
 
   app.get("/addpost", function (req, res) {
@@ -179,7 +204,7 @@ module.exports = function (app, shopData) {
           return;
         }
 
-        let newData = Object.assign({}, shopData, {
+        let newData = Object.assign({}, appData, {
           user: req.session.user,
           userId: req.session.userId,
           topics: results, // Pass the filtered topics data to the view
@@ -188,7 +213,7 @@ module.exports = function (app, shopData) {
         res.render("addpost.ejs", newData);
       });
     } else {
-      let newData = Object.assign({}, shopData, {
+      let newData = Object.assign({}, appData, {
         user: req.session.user,
         userId: req.session.userId,
       });
@@ -221,7 +246,7 @@ module.exports = function (app, shopData) {
               if (err) {
                 return console.error(err.message); // return error message in node console log
               } else {
-                let newData = Object.assign({}, shopData, {
+                let newData = Object.assign({}, appData, {
                   user: req.session.user,
                   userId: req.session.userId,
                   topic: result[0].Name,

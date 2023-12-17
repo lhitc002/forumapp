@@ -70,24 +70,5 @@ CREATE TABLE `user_topics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 # Create the app user and give it access to the database
-CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2027';
-GRANT ALL PRIVILEGES ON myBookshop.* TO 'appuser'@'localhost';
-
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(1, 'database book', 40.25);
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(2, 'Node.js book', 25.00);
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(3, 'Express book', 31.99);
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(13, 'this is under 20 magazine', 18.99);
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(14, 'cheap reaping book', 11.42);
-INSERT INTO myBookshop.books
-(id, name, price)
-VALUES(15, 'haha funnies joke book', 5.00);
+CREATE USER 'appuser'@'%' IDENTIFIED WITH mysql_native_password BY 'app2027';
+GRANT ALL PRIVILEGES ON myForum.* TO 'appuser'@'localhost';

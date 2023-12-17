@@ -1,40 +1,40 @@
-# Create the bookshop database
-CREATE Database myBookshop;
+# Insert database rows here
+INSERT INTO myForum.users
+(Id, Username, PasswordHash, `First Name`, `Last Name`, Email)
+VALUES(0x649AA91C6F8948F9A6EF2904DD6ADAB4, 'anotheruser', '1f40fc92da241694750979ee6cf582f2d5d7d28e18335de05abc54d0560e0f5302860c652bf08d560252aa5e74210546f369fbbbce8c12cfc7957b2652fe9a75', 'AnotherUser', 'Smith', 'AUSmith@test.org');
+INSERT INTO myForum.users
+(Id, Username, PasswordHash, `First Name`, `Last Name`, Email)
+VALUES(0x6726E2926C0B415EA1540AA3697DAD22, 'test', '25ff47de4984a0a4911b047f4543264e3cb3ca7d5a6a41b13689f6d16b0ae7f70bb6d0d9e9a0b1e21f00ef11a2963056f4952d80f72fe1cda863b176aaac0c6b', 'Tester', 'McTesting', 'testermctesting@gmail.com');
+INSERT INTO myForum.users
+(Id, Username, PasswordHash, `First Name`, `Last Name`, Email)
+VALUES(0xDC507624EE9A4CA8A33AFA185C950BDE, 'tatter', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'TatterTat', 'Tetted', 'tattertattetted@outlook.co.uk');
 
-# Select the bookshop database
-USE myBookshop;
+INSERT INTO myForum.topics
+(id, name, description)
+VALUES(0x4368BAE65B8A999499DA0E97D1B28687, 'Test', 'A test topic');
+INSERT INTO myForum.topics
+(id, name, description)
+VALUES(0x4BEF14FF98B64DF692E5549257424954, 'Potato', 'Lovely Potatoes');
 
-# create table
-CREATE TABLE books (
-    id INT NOT NULL AUTO_INCREMENT,
-    name LONGTEXT,
-    price DOUBLE,
-    PRIMARY KEY (id)
-);
+INSERT INTO myForum.user_topics
+(user_id, topic_id)
+VALUES(0x649AA91C6F8948F9A6EF2904DD6ADAB4, 0x4368BAE65B8A999499DA0E97D1B28687);
+INSERT INTO myForum.user_topics
+(user_id, topic_id)
+VALUES(0x649AA91C6F8948F9A6EF2904DD6ADAB4, 0x4BEF14FF98B64DF692E5549257424954);
 
-# Insert data into the bookshop database
-INSERT INTO books (name, price)
-VALUES ('database book', 40.25),
-       ('Node.js book', 25.00),
-       ('Express book', 31.99),
-       ('Python Basics', 15.50),
-       ('HTML and CSS Essentials', 18.75),
-       ('JavaScript Advanced', 17.99),
-       ('Machine Learning Primer', 19.95),
-       ('Data Structures in C++', 14.25)
-       ('Introduction to Java', 9.25),
-       ('CSS Mastery', 8.50),
-       ('JavaScript for Beginners', 7.99),
-       ('SQL Crash Course', 6.75),
-       ('Web Design 101', 5.50)
-       ('Python Programming for Kids', 4.75),
-       ('HTML5 Basics', 3.99),
-       ('CSS Cookbook', 4.50),
-       ('JQuery Essentials', 4.25),
-       ('SQL Fundamentals', 2.99);
-
-# Add user (localhost host only so external sources cannot access it)
-CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2027';
-
-# Grant privileges for the myBookshop database to 'appuser' user
-GRANT ALL PRIVILEGES ON myBookshop.* TO 'appuser'@'localhost';
+INSERT INTO myForum.posts
+(id, topic_id, user_id, title, body)
+VALUES(0x41AD04CE63128D9AAFFBB573EB763514, 0x4368BAE65B8A999499DA0E97D1B28687, 0xDC507624EE9A4CA8A33AFA185C950BDE, 'Test Post', 'ajkfhsdafhjasdkjfhasdlkfjasdlkfjkdsalkfjadskljfalsdk aaaaaaaaa eeeeeeeeeeeeeeeeee');
+INSERT INTO myForum.posts
+(id, topic_id, user_id, title, body)
+VALUES(0x41EF9ABE4D7E0CF896678FDDC2B1D8EF, 0x4BEF14FF98B64DF692E5549257424954, 0x6726E2926C0B415EA1540AA3697DAD22, 'yappa yappa', 'RaNdOm WorDs');
+INSERT INTO myForum.posts
+(id, topic_id, user_id, title, body)
+VALUES(0x4316B63EAD573A29B7B2D4BA6119FF19, 0x4368BAE65B8A999499DA0E97D1B28687, 0x649AA91C6F8948F9A6EF2904DD6ADAB4, 'alalalalalalalala', 'aaaaa');
+INSERT INTO myForum.posts
+(id, topic_id, user_id, title, body)
+VALUES(0x479400544E21D063A333D1ADB8F70A34, 0x4BEF14FF98B64DF692E5549257424954, 0x6726E2926C0B415EA1540AA3697DAD22, 'Another', 'HAHA!! THIS IS A POST BODY!');
+INSERT INTO myForum.posts
+(id, topic_id, user_id, title, body)
+VALUES(0x4B8D69553ECFF93DBB683F93733A970F, 0x4368BAE65B8A999499DA0E97D1B28687, 0x649AA91C6F8948F9A6EF2904DD6ADAB4, 'aaaaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');

@@ -1,5 +1,10 @@
 <h2>Profile</h2> <!-- Profile heading (no server variables used) -->
 
+<!--
+    PROFILE PAGE
+    Displays the User Account details for a user logged in.
+    Only accessible if a user is logged in for the current session.
+-->
 <% if (user == null) { %>
     <p class="text-danger">You must be logged in to access this page!</p>
 <% } else { %>

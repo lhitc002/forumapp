@@ -1,14 +1,20 @@
-<h2><%= listHeading %></h2>
+<h2><%= listHeading %></h2> <!-- List heading variable using itemType as variable to be displayed -->
 
+
+<!--
+    Forloop if the List query succeeds
+    Loops through every found column in a database table query
+    and displays their values as well
+-->
 <% if (querySuccess) { %>
   <ul>
       <% columns.forEach(function(row) { %>
           <% var firstColumnName = Object.keys(row)[0]; %>
-          <li><strong><%= firstColumnName %>:</strong> <%= row[firstColumnName] %></li>
+          <li><strong><%= firstColumnName %>:</strong> <%= row[firstColumnName] %></li> <!-- Main column first (first in grabbed columns from query)-->
           <% var otherColumns = Object.keys(row).slice(1); %>
           <% if (otherColumns.length > 0) { %>
               <ul>
-                  <% otherColumns.forEach(function(col) { %>
+                  <% otherColumns.forEach(function(col) { %> <!-- Other columns in nested UL -->
                       <li><strong><%= col %>:</strong> <%= row[col] %></li>
                   <% }); %>
               </ul>
@@ -18,3 +24,10 @@
 <% } else { %>
     <p>No results</p>
 <% } %>
+
+<!-- Passes the below content to the scripts variable in layout.ejs -->
+<%- contentFor('scripts') %>
+<script>
+    appendToHeading('List Page'); // Running the function I defined in layout.ejs
+    // This function is able to be called here because the script for it was created before the scripts variable was placed on the layout
+</script>

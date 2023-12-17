@@ -10,11 +10,10 @@ module.exports = function (app, appData) {
   const { v4: uuidv4 } = require("uuid");
 
   function hashPassword(str) {
-    const hash = crypto.createHash('sha512');
+    const hash = crypto.createHash("sha512");
     hash.update(str);
-    return hash.digest('hex');
+    return hash.digest("hex");
   }
-  
 
   function updateUser(
     req,
@@ -28,35 +27,29 @@ module.exports = function (app, appData) {
   ) {
     // Update password hash and other details
     if (passwordString != null) {
-      hashPassword(passwordString)
-        .then((passwordHash) => {
-          let updateQuery =
-            "UPDATE users SET UserName=?, passwordHash=?, `First Name`=?, `Last Name`=?, Email=? WHERE Id=uuidToBin(?)";
-          db.query(
-            updateQuery,
-            [
-              userName,
-              passwordHash,
-              firstName,
-              lastName,
-              email,
-              req.session.userId,
-            ],
-            (err, results) => {
-              if (err) {
-                console.error(err);
-                callback(false);
-                return;
-              }
-              console.log("Password and details updated:", results);
-              callback(true);
-            }
-          );
-        })
-        .catch((hashErr) => {
-          console.error(hashErr);
-          callback(false);
-        });
+      let passwordHash = hashPassword(passwordString);
+      let updateQuery =
+        "UPDATE users SET UserName=?, passwordHash=?, `First Name`=?, `Last Name`=?, Email=? WHERE Id=uuidToBin(?)";
+      db.query(
+        updateQuery,
+        [
+          userName,
+          passwordHash,
+          firstName,
+          lastName,
+          email,
+          req.session.userId,
+        ],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            callback(false);
+            return;
+          }
+          console.log("Password and details updated:", results);
+          callback(true);
+        }
+      );
     } else {
       // Update other details without changing password hash
       let updateQuery =
@@ -95,35 +88,29 @@ module.exports = function (app, appData) {
 
       let newId = result[0].newId;
 
-      hashPassword(passwordString)
-        .then((passwordHash) => {
-          let userInsertQuery =
-            "INSERT INTO users (id, UserName, passwordHash, `First Name`, `Last Name`, Email) VALUES (?, ?, ?, ?, ?, ?)";
-          db.query(
-            userInsertQuery,
-            [
-              newId,
-              userNameString,
-              passwordHash,
-              firstNameString,
-              lastNameString,
-              emailString,
-            ],
-            (err, results) => {
-              if (err) {
-                console.error(err);
-                // Handle the error
-              } else {
-                console.log("Data inserted:", results);
-                // Handle successful insertion
-              }
-            }
-          );
-        })
-        .catch((hashErr) => {
-          console.error(hashErr);
-          // Handle hash error
-        });
+      let passwordHash = hashPassword(passwordString);
+      let userInsertQuery =
+        "INSERT INTO users (id, UserName, passwordHash, `First Name`, `Last Name`, Email) VALUES (?, ?, ?, ?, ?, ?)";
+      db.query(
+        userInsertQuery,
+        [
+          newId,
+          userNameString,
+          passwordHash,
+          firstNameString,
+          lastNameString,
+          emailString,
+        ],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            // Handle the error
+          } else {
+            console.log("Data inserted:", results);
+            // Handle successful insertion
+          }
+        }
+      );
     });
   }
 
@@ -142,7 +129,7 @@ module.exports = function (app, appData) {
 
       const user = results[0];
 
-      let passwordHash = hashPassword(passwordString);
+      let passwordHash = hashPassword(oldPasswordString);
       if (passwordHash === user.passwordHash) {
         callback("", user.Id); // No error, user exists and password is correct, returning user ID
       } else {

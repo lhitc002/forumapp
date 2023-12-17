@@ -38,14 +38,14 @@ CREATE TABLE `users` (
   `Last Name` varchar(100) DEFAULT NULL,
   `Email` varchar(320) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `topics` (
   `id` binary(16) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `description` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `posts` (
   `id` binary(16) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE `posts` (
   KEY `users_FK` (`user_id`),
   CONSTRAINT `topics_FK` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`),
   CONSTRAINT `users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `user_topics` (
   `user_id` binary(16) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE `user_topics` (
   KEY `topic_id` (`topic_id`),
   CONSTRAINT `user_topics_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `user_topics_ibfk_2` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 # Create the app user and give it access to the database
 CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2027';

@@ -1,4 +1,4 @@
-# Create database script for Berties books
+# Create database script for Goldmsmiths Forum
 
 # Create the database
 CREATE DATABASE myForum;

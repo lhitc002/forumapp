@@ -70,5 +70,5 @@ CREATE TABLE `user_topics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 # Create the app user and give it access to the database
-CREATE USER 'appuser'@'%' IDENTIFIED WITH mysql_native_password BY 'app2027';
+CREATE USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2027';
 GRANT ALL PRIVILEGES ON myForum.* TO 'appuser'@'localhost';

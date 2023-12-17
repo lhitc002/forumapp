@@ -129,7 +129,7 @@ module.exports = function (app, appData) {
 
       const user = results[0];
 
-      let passwordHash = hashPassword(oldPasswordString);
+      let passwordHash = hashPassword(passwordString);
       if (passwordHash === user.passwordHash) {
         callback("", user.Id); // No error, user exists and password is correct, returning user ID
       } else {

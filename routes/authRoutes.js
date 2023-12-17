@@ -10,14 +10,11 @@ module.exports = function (app, appData) {
   const { v4: uuidv4 } = require("uuid");
 
   function hashPassword(str) {
-    return crypto.subtle
-      .digest("SHA-512", new TextEncoder("utf-8").encode(str))
-      .then((buf) => {
-        return Array.prototype.map
-          .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
-          .join("");
-      });
+    const hash = crypto.createHash('sha512');
+    hash.update(str);
+    return hash.digest('hex');
   }
+  
 
   function updateUser(
     req,
@@ -145,18 +142,12 @@ module.exports = function (app, appData) {
 
       const user = results[0];
 
-      hashPassword(passwordString)
-        .then((passwordHash) => {
-          if (passwordHash === user.passwordHash) {
-            callback("", user.Id); // No error, user exists and password is correct, returning user ID
-          } else {
-            callback("Password is incorrect", null);
-          }
-        })
-        .catch((hashErr) => {
-          console.error(hashErr);
-          return callback(`Error: ${hashErr.message}`, null);
-        });
+      let passwordHash = hashPassword(passwordString);
+      if (passwordHash === user.passwordHash) {
+        callback("", user.Id); // No error, user exists and password is correct, returning user ID
+      } else {
+        callback("Password is incorrect", null);
+      }
     });
   }
 
@@ -308,63 +299,57 @@ module.exports = function (app, appData) {
 
       const user = results[0];
       // Validate old password
-      hashPassword(oldPasswordString)
-        .then((passwordHash) => {
-          if (passwordHash !== user.passwordHash) {
-            let newData = Object.assign({}, appData, {
-              userName: req.body.userName,
-              errorMsg: "Old password is incorrect",
-              user: req.session.user,
-              userId: req.session.userId,
-              firstName: firstName,
-              lastName: lastName,
-              email: email,
-            });
-            res.render("profile.ejs", newData);
-            return;
-          } else {
-            // Password is correct, proceed with updates
-            if (!req.body.newPasswordString) {
-              // Update other details without changing the password hash
-              updateUser(
-                req,
-                res,
-                userName,
-                null,
-                firstName,
-                lastName,
-                email,
-                (successful) => {
-                  if (successful) {
-                    res.redirect("/profile");
-                  } else {
-                  }
-                }
-              );
-            } else {
-              // Update password hash and other details
-              updateUser(
-                req,
-                res,
-                userName,
-                newPasswordString,
-                firstName,
-                lastName,
-                email,
-                (successful) => {
-                  if (successful) {
-                    res.redirect("/profile");
-                  } else {
-                  }
-                }
-              );
-            }
-          }
-        })
-        .catch((hashErr) => {
-          console.error(hashErr);
-          res.status(500).send(`Error: ${hashErr.message}`);
+      let passwordHash = hashPassword(oldPasswordString);
+      if (passwordHash !== user.passwordHash) {
+        let newData = Object.assign({}, appData, {
+          userName: req.body.userName,
+          errorMsg: "Old password is incorrect",
+          user: req.session.user,
+          userId: req.session.userId,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
         });
+        res.render("profile.ejs", newData);
+        return;
+      } else {
+        // Password is correct, proceed with updates
+        if (!req.body.newPasswordString) {
+          // Update other details without changing the password hash
+          updateUser(
+            req,
+            res,
+            userName,
+            null,
+            firstName,
+            lastName,
+            email,
+            (successful) => {
+              if (successful) {
+                res.redirect("/profile");
+              } else {
+              }
+            }
+          );
+        } else {
+          // Update password hash and other details
+          updateUser(
+            req,
+            res,
+            userName,
+            newPasswordString,
+            firstName,
+            lastName,
+            email,
+            (successful) => {
+              if (successful) {
+                res.redirect("/profile");
+              } else {
+              }
+            }
+          );
+        }
+      }
     });
   });
 };

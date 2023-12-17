@@ -88,7 +88,7 @@ function configureDatabase() {
 
     // Define the database connection
     const db = mysql.createConnection ({
-        host: 'localhost',
+        host: '192.168.1.149',
         user: 'appuser',
         password: 'app2027',
         database: 'myForum'

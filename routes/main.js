@@ -513,25 +513,41 @@ module.exports = function (app, shopData) {
 
   // mapping the addpost page route to the addpost.ejs view and setting the layout from express-ejs-layouts to shared/addpost.ejs
   app.get("/addpost", function (req, res) {
-    let query = `SELECT UuidFromBin(Id) AS Id, Name FROM topics`;
-
-    db.query(query, (err, results) => {
-      if (err) {
-        // Handle the error appropriately
-        console.error(err);
-        res.status(500).send("Error fetching topics");
-        return;
-      }
-
-      let newData = Object.assign({}, shopData, {
-        user: req.session.user,
-        userId: req.session.userId,
-        topics: results, // Pass the topics data to the view
-      });
-
-      res.render("addpost.ejs", newData);
-    });
-  });
+    let userId = req.session.userId; // Assuming userId holds the current user's ID
+  
+    if (userId != null) {
+        // Query modified to fetch topics associated with the current user
+        let query = `
+        SELECT UuidFromBin(t.Id) AS Id, t.Name 
+        FROM topics t
+        JOIN user_topics ut ON t.id = ut.topic_id
+        WHERE ut.user_id = uuidToBin('${userId}')
+        `;
+    
+        db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error fetching topics");
+            return;
+        }
+    
+        let newData = Object.assign({}, shopData, {
+            user: req.session.user,
+            userId: req.session.userId,
+            topics: results, // Pass the filtered topics data to the view
+        });
+    
+        res.render("addpost.ejs", newData);
+        });
+    } else {
+        let newData = Object.assign({}, shopData, {
+            user: req.session.user,
+            userId: req.session.userId,
+        });
+    
+        res.render("addpost.ejs", newData);
+    }
+  });  
 
   /**
    * NOTE:

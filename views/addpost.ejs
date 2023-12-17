@@ -11,7 +11,8 @@
   <form id="addPostForm" action="/postadded" method="POST" class="formBox">
       <h4 class="underlinedHeading">Add A Post</h4>
       <label>Topic</label>
-      <select name="topic">
+      <select name="topic" required>
+        <option value="">Please select</option>
         <% for (let topic of topics) { %>
           <option value="<%= topic.Id %>"><%= topic.Name %></option>
         <% } %>

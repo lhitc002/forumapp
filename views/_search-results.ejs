@@ -1,0 +1,25 @@
+<!-- 
+    Formatted list utilising the availableItems variable from the server
+    This list is intended to be passed into an existing page without a layout, via AJAX 
+-->
+<ul>
+    <% if (availableItems.length > 0) { %>
+      <% for(let i = 0; i < availableItems.length; i++) { %>
+        <li>
+          <span class="boldListHeading">ID: </span><%= availableItems[i].id %>
+        </li>
+        <ul>
+          <% Object.keys(availableItems[i]).forEach(function(columnName) { %>
+            <% if (columnName !== 'id') { %>
+              <li>
+                <span class="boldListHeading"><%= columnName %>: </span><%= availableItems[i][columnName] %>
+              </li>
+            <% } %>
+          <% }); %>
+        </ul>
+      <% } %>
+    <% } else { %>
+      <li>No results</li>
+    <% } %>
+</ul>
+  

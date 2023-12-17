@@ -1,0 +1,20 @@
+<h2><%= listHeading %></h2>
+
+<% if (querySuccess) { %>
+  <ul>
+      <% columns.forEach(function(row) { %>
+          <% var firstColumnName = Object.keys(row)[0]; %>
+          <li><strong><%= firstColumnName %>:</strong> <%= row[firstColumnName] %></li>
+          <% var otherColumns = Object.keys(row).slice(1); %>
+          <% if (otherColumns.length > 0) { %>
+              <ul>
+                  <% otherColumns.forEach(function(col) { %>
+                      <li><strong><%= col %>:</strong> <%= row[col] %></li>
+                  <% }); %>
+              </ul>
+          <% } %>
+      <% }); %>
+  </ul>
+<% } else { %>
+    <p>No results</p>
+<% } %>

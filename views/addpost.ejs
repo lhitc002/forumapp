@@ -1,0 +1,25 @@
+<h2>Add Post</h2> <!-- Add Post heading (no server variables used) -->
+
+<!-- 
+  Add Post form. Redirects user to the '/postadded' page when submitted
+  Will display the form data that is entered on that page.
+  Form fields are required so it cannot be submitted without entering data in all of them.
+-->
+<% if (user == null) { %>
+  <p class="text-danger">You must be logged in to access this form!</p>
+<% } else { %>
+  <form id="addPostForm" action="/postadded" method="POST" class="formBox">
+      <h4 class="underlinedHeading">Add A Post</h4>
+      <label>Topic</label>
+      <select name="topic">
+        <% for (let topic of topics) { %>
+          <option value="<%= topic.Id %>"><%= topic.Name %></option>
+        <% } %>
+      </select>      
+      <label>Title</label>
+      <input id="title" type="text" name="title" placeholder="Enter a post title..." required /><br />
+      <label>Body</label>
+      <textarea id="body" name="body" placeholder="Enter a post body..." required></textarea><br />
+      <input id="submitSearch" type="submit" value="Add Book" >
+  </form>
+<% } %>

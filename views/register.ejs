@@ -1,0 +1,27 @@
+<h2>Register for <%= appName %></h2> <!-- Register heading with appName variable displayed -->
+<!-- 
+  Register form. Redirects user to the '/registered' page when submitted
+  Will display the form data that is entered on that page.
+  Form fields are required so it cannot be submitted without entering data in all of them.
+-->
+<form method="POST" action="/registered" class="formBox">
+  <h4 class="underlinedHeading">Register</h4>
+  <label>Username</label>
+  <input id="userName" type="text" name="userName" placeholder="Enter a username..." required />
+  <label>Password</label>
+  <input id="passwordString" type="password" name="passwordString" placeholder="Enter a password..." required />
+  <label>First Name</label>
+  <input id="firstName" type="text" name="firstName" placeholder="Enter a first name..." required />
+  <label>Last Name</label>
+  <input id="lastName" type="text" name="lastName" placeholder="Enter a last name..." required />
+  <label>Email</label>
+  <input id="email" type="text" name="email" placeholder="Enter an email..." required />
+  <input type="submit" value="Register" /> <!-- Submit button to trigger the form -->
+</form>
+
+<!-- Passes the below content to the scripts variable in layout.ejs -->
+<%- contentFor('scripts') %>
+<script>
+    appendToHeading('Register Page'); // Running the function I defined in layout.ejs
+    // This function is able to be called here because the script for it was created before the scripts variable was placed on the layout
+</script>

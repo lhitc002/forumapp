@@ -1,0 +1,10 @@
+<h2>About <%= appName %></h2> <!-- About heading with appName variable displayed -->
+<p>Our site is where folks share thoughts on different things.</p>
+<p>Click through the main page to find topics, users, and posts. Add your own thoughts or explore what’s already there.</p>
+
+<!-- Passes the below content to the scripts variable in layout.ejs -->
+<%- contentFor('scripts') %>
+<script>
+    appendToHeading('About Page'); // Running the function I defined in layout.ejs
+    // This function is able to be called here because the script for it was created before the scripts variable was placed on the layout
+</script>

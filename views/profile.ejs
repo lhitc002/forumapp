@@ -1,0 +1,27 @@
+<h2>Profile</h2> <!-- Profile heading (no server variables used) -->
+
+<% if (user == null) { %>
+    <p class="text-danger">You must be logged in to access this page!</p>
+<% } else { %>
+    <!-- Any other user-related links or actions -->
+    <form method="POST" action="/editProfile" class="formBox">
+        <h4 class="underlinedHeading">Profile Details</h4>
+        <label>Username</label>
+        <input id="userName" type="text" name="userName" value="<%= userName %>" placeholder="Enter a username..." required />
+        <label>Old Password (REQUIRED)</label>
+        <input id="oldPasswordString" type="password" name="oldPasswordString" placeholder="Enter your existing password..." required />
+        <label>New Password (Optional)</label>
+        <input id="newPasswordString" type="password" name="newPasswordString" placeholder="(Optional) Enter a new password..." />
+        <label>First Name</label>
+        <input id="firstName" type="text" name="firstName" value="<%= firstName %>" placeholder="Enter a first name..." required />
+        <label>Last Name</label>
+        <input id="lastName" type="text" name="lastName" value="<%= lastName %>" placeholder="Enter a last name..." required />
+        <label>Email</label>
+        <input id="email" type="text" name="email" value="<%= email %>" placeholder="Enter an email..." required />
+        <input type="submit" value="Update" /> <!-- Submit button to trigger the form -->
+    </form>
+<% } %>
+
+<% if (errorMsg != null) { %>
+  <p class="text-danger"><%= errorMsg %></p>
+<% } %>

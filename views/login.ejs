@@ -1,0 +1,25 @@
+<h2>Login to <%= appName %></h2> <!-- Register heading with appName variable displayed -->
+<!-- 
+  Register form. Redirects user to the '/registered' page when submitted
+  Will display the form data that is entered on that page.
+  Form fields are required so it cannot be submitted without entering data in all of them.
+-->
+<form method="POST" action="/loggedin" class="formBox">
+  <h4 class="underlinedHeading">Login</h4>
+  <label>Username</label>
+  <input id="userName" type="text" name="userName" placeholder="Enter a username..." required />
+  <label>Password</label>
+  <input id="passwordString" type="password" name="passwordString" placeholder="Enter a password..." required />
+  <input type="submit" value="Login" /> <!-- Submit button to trigger the form -->
+</form>
+
+<% if (errorMsg != null) { %>
+  <p class="text-danger"><%= errorMsg %></p>
+<% } %>
+
+<!-- Passes the below content to the scripts variable in layout.ejs -->
+<%- contentFor('scripts') %>
+<script>
+    appendToHeading('Login Page'); // Running the function I defined in layout.ejs
+    // This function is able to be called here because the script for it was created before the scripts variable was placed on the layout
+</script>

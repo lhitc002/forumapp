@@ -1,0 +1,111 @@
+<h2>Search <%= appName %></h2> <!-- Search heading with appName variable displayed -->
+
+<!-- 
+  Search form, intercepted by ajax to prevent page redirection. When submitting or clearing,
+  The data will be replaced dynamically on the current page.
+-->
+<form id="searchForm" action="/search-result" method="GET" class="formBox searchBox">
+  <div class="TypeSect">
+    <label>Search Type: </label>
+    <select name="itemType">
+      <option value="Posts">Posts</option>
+      <option value="Topics">Topics</option>
+      <option value="Users">Users</option>
+    </select>
+  </div>
+  <div class="keywordSect">
+    <p class="searchBoxText">What book do you want?</p>
+    <input id="keywordExact" type="text" name="keywordExact" placeholder="Exact search...">
+    <input id="keywordPartial" type="text" name="keywordPartial" placeholder="Partial match search...">
+    <input id="submitSearch" type="submit" value="Search" >
+    <input id="clearSearch" type="submit" value="Clear" >
+  </div>
+</form>
+
+<!-- 
+  This message is hidden by default, unless the user does not enter any queries
+  when they press the submit button.
+-->
+<div class="emptyMessage" style="display: none;">
+  <p>No search queries entered, showing all results.</p>
+</div>
+
+<!-- 
+  This is the element that is dynamically populated with the form GET data.
+  It has no content by default, so is practically invisible from the page.
+-->
+<div id="searchResults"></div>
+
+<!-- Passes the below content to the scripts variable in layout.ejs -->
+<%- contentFor('scripts') %>
+<script>
+    appendToHeading('Search Page'); // Running the function I defined in layout.ejs
+    // This function is able to be called here because the script for it was created before the scripts variable was placed on the layout
+    
+    /**
+     * Configure my Goldmiths Forum web application with EJS templating engine and layout support.
+     * - This application uses the same functions that I created from the 'Thirsty Student' application, with difference that
+     *   .html files are used in place of .html files.
+     * 
+     * @param {*} clear - This is a boolean that is false by default. If true- 
+     * -it will void all the values in the search form data before posting
+     * -essentially passing no additional WHERE conditions to the server.
+     */
+    function performSearch(clear = false) {
+
+      // clear form data values if boolean true
+      if (clear) {
+        $("#keywordExact, #keywordPartial").val("");
+        $('#keywordExact').val('');
+        $('#keywordPartial').val('');
+      }
+
+      let searchFormData = $("#searchForm").serialize();
+
+      // This is an AJAX request. It allows me to perform a GET or POST request to the server-
+      // -without having to refresh my page to the URL that the server is on.
+      // This in turn allows me to store the data and display it on this same page without redirection.
+      $.ajax({
+        type: 'GET',
+        url: '/search-result', // Replace with your API endpoint
+        data: searchFormData,
+        success: function(response) {
+          // Handle success response here
+          $("#searchResults").html(response);
+        }
+      });
+    }
+    
+    // reset opposite input box to prevent issue if other is input in
+    $('#keywordExact, #keywordPartial').on('input', function() {
+      // Check which input box triggered the event
+      if ($(this).attr('id') === 'keywordExact') {
+        $('#keywordPartial').val(''); // clear input box value
+      } else {
+        $('#keywordExact').val(''); // clear input box value
+      }
+    });
+
+    // trigger the performSearch() function when the submit button is clicked
+    // in turn sending the form data to the server
+    $("#submitSearch").on("click", function(e) {
+      e.preventDefault();
+
+      // if both input boxes contain nothing, show elements with class of emptyMessage.
+      if ($('#keywordPartial').val() === '' && $('#keywordExact').val() === '') {
+        $(".emptyMessage").css("display", ""); // remove display: none; from element css
+      } else {
+        $(".emptyMessage").css("display", "none"); // add display: none; to element css
+      }
+
+      // call performSearch() function
+      performSearch();
+    });
+
+    // trigger the performSearch() button with the function "clear" parameter set to true.
+    $("#clearSearch").on("click", function(e) {
+      e.preventDefault();
+      $(".emptyMessage").css("display", "none");
+      performSearch(true);
+    });
+</script>

@@ -231,7 +231,7 @@ module.exports = function (app, appData) {
         console.error("Error destroying session:", err);
         res.send("Error logging out");
       } else {
-        res.redirect("/login"); // Redirect to login page after logout
+        res.redirect("./login"); // Redirect to login page after logout
       }
     });
   });
@@ -326,7 +326,7 @@ module.exports = function (app, appData) {
             email,
             (successful) => {
               if (successful) {
-                res.redirect("/profile");
+                res.redirect("./profile");
               } else {
               }
             }
@@ -343,7 +343,7 @@ module.exports = function (app, appData) {
             email,
             (successful) => {
               if (successful) {
-                res.redirect("/profile");
+                res.redirect("./profile");
               } else {
               }
             }

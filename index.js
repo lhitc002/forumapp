@@ -1,5 +1,5 @@
 /**
- * Goldmiths Forum Application, based from template by Llewelyn Fernandes (Project Lecturer)
+ * Goldsmiths Forum Application, based from template by Llewelyn Fernandes (Project Lecturer)
  * This project was built from the previous berties books assignment template.
  * Template is located at https://github.com/lfern002/gs-dwa-berties-books-initial-code
  */
@@ -8,7 +8,7 @@
  * Variable declaration section
  */
 const shopData = {
-    appName: "Goldmiths Forum"
+    appName: "Goldsmiths Forum"
 }; // Defining the shop data object
 
 const port = 8000; // Define the port of the application
@@ -24,7 +24,7 @@ const bodyParser = require ('body-parser'); // importing the body parser module
 const mysql = require('mysql'); // importing the mysql database server module
 
 /**
- * Configure my Goldmiths Forum web application with EJS templating engine and layout support.
+ * Configure my Goldsmiths Forum web application with EJS templating engine and layout support.
  * - This application uses the same functions that I created from the 'Thirsty Student' application, with difference that
  *   .html files are used in place of .html files.
  * 
@@ -57,7 +57,7 @@ function configureApp(app, express) {
 }
 
 /**
- * Map routes for my Goldmiths Forum web application.
+ * Map routes for my Goldsmiths Forum web application.
  * This function previously existed to map routes.
  * It is now only used to pass in express-ejs-layouts object data and- 
  * -call map routing from another file.
@@ -73,13 +73,14 @@ function mapRoutes(app) {
     // The elipses are required. These operators are called object spread. they copy the individual properties of objects into this single one instead of copying the objects as a whole
     var combinedData = { ...layoutData, ...shopData };
 
-    // Requires the main.js file inside the routes folder passing in the Express app and data as arguments.  
-    // All the route mappings will go in this file, instead of here.
+    // Requires the main.js and authRoutes.js file inside the routes folder passing in the Express app and data as arguments.  
+    // All the route mappings will go in these files, instead of here.
+    require("./routes/authRoutes")(app, combinedData);
     require("./routes/main")(app, combinedData);
 }
 
 /**
- * Configure the Database for my Goldmiths Forum web application.
+ * Configure the Database for my Goldsmiths Forum web application.
  * This function creates and opens a connection to my MySQL database.
  * The database contains a table with books, their IDs and their prices.
  */
@@ -105,7 +106,7 @@ function configureDatabase() {
 }
 
 /**
- * Main function for my Goldmiths Forum web application.
+ * Main function for my Goldsmiths Forum web application.
  * This function calls all the other functions in the proper order, then initializes-
  * -my web application, so it can be accessed on the web.
  */

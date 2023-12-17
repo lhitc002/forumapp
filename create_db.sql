@@ -5,7 +5,7 @@ CREATE DATABASE myForum;
 USE myForum;
 
 # Create stored procedures for binary uuid conversion
-CREATE DEFINER=`appuser`@`%` FUNCTION `myForum`.`UuidFromBin`(_bin BINARY(16)) RETURNS char(36) CHARSET utf8mb4
+CREATE DEFINER=`appuser`@`localhost` FUNCTION `myForum`.`UuidFromBin`(_bin BINARY(16)) RETURNS char(36) CHARSET utf8mb4
     DETERMINISTIC
     SQL SECURITY INVOKER
 RETURN
@@ -17,7 +17,7 @@ RETURN
             HEX(SUBSTR(_bin, 11))
                  ));
 
-CREATE DEFINER=`appuser`@`%` FUNCTION `myForum`.`uuidToBin`(_uuid char(36)) RETURNS binary(16)
+CREATE DEFINER=`appuser`@`localhost` FUNCTION `myForum`.`uuidToBin`(_uuid char(36)) RETURNS binary(16)
     DETERMINISTIC
     SQL SECURITY INVOKER
 RETURN
